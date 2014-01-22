@@ -1,4 +1,4 @@
 adventure-in-prolog
 ===================
 
-adventure-in-prolog
+Adventure-like game written in Prolog
