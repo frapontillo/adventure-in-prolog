@@ -23,6 +23,9 @@ door(hall, 'dining room').
 door(kitchen, cellar).
 door('dining room', kitchen).
 
+% door statuses, in the beginning they are all closed
+:- door(In, Out), asserta(door_status(In, Out, closed)), fail.
+
 % facts about properties of things the game player might try to eat
 edible(apple).
 edible(crackers).
@@ -31,7 +34,7 @@ edible(crackers).
 tastes_yucky(broccoli).
 
 % at the beginning, the flashlight is off
-turned_off(flashlight).
+:- asserta(turned_off(flashlight)).
 
 % the player is in the kitchen (dinamically so we can remove some)
 :- asserta(here(kitchen)).
