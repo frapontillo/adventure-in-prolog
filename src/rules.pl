@@ -10,7 +10,7 @@ where_food(Food, Location) :- location(Food, Location), edible(Food).
 exists_food(Food) :- where_food(Food, ?).
 
 % list the elements in a given room (fail is needed to loop through the whole KB)
-list_things(Room) :- location(Item, Room), tab(2), write(Item), nl, fail.
+list_things(Room) :- is_contained_in(Item, Room), tab(2), write(Item), nl, fail.
 % after the listing ends, the loop fails, so we need to tell that the "loop" is always true
 list_things(_).
 
@@ -58,7 +58,7 @@ move(Place) :- retract(here(_)), asserta(here(Place)).
 % take/1, used by the player to grab something from the surrounding world
 take(Item) :- can_take(Item), take_object(Item).
 
-can_take(Item) :- here(CurPlace), location(Item, CurPlace), !.
+can_take(Item) :- here(CurPlace), is_contained_in(Item, CurPlace), !.
 can_take(Item) :-
 	write('Sorry, you can''t take the '), write(Item), nl,
 	write('You can take:'), nl,
@@ -93,7 +93,7 @@ check_light(Light) :- turned_off(Light), write('The light '), write(Light), writ
 check_light(Light) :- write('The light '), write(Light), write(' is on.'), nl.
 
 % open/1 opens one of the door connected to the current room
-open_door(Door) :- here(CurPlace), can_open(CurPlace, Door), door(CurPlace, Door), do_open(CurPlace, Door).
+open_door(Door) :- here(CurPlace), can_open(CurPlace, Door), !, door(CurPlace, Door), !, do_open(CurPlace, Door).
 
 % check if there is a connection between the current room and the desired place
 can_open(CurPlace, Door) :- check_connection(CurPlace, Door), !, check_already_open(CurPlace, Door), !.
@@ -103,10 +103,10 @@ check_already_open(CurPlace, Door) :- door_status(CurPlace, Door, closed).
 check_already_open(_, _) :- write('The door is already open :)'), nl.
 
 % actually opens a door
-do_open(CurPlace, NewPlace) :- retract(door_status(CurPlace, NewPlace, closed)), asserta(door_status(CurPlace, NewPlace, opened)).
+do_open(CurPlace, NewPlace) :- retract(door_status(CurPlace, NewPlace, closed)), !, asserta(door_status(CurPlace, NewPlace, opened)).
 
 % close/1 closes one of the door connected to the current room
-close_door(Door) :- here(CurPlace), can_close(CurPlace, Door), door(CurPlace, Door), do_close(CurPlace, Door).
+close_door(Door) :- here(CurPlace), can_close(CurPlace, Door), door(CurPlace, Door), !, do_close(CurPlace, Door).
 
 % check if there is a connection between the current room and the desired place
 can_close(CurPlace, Door) :- check_connection(CurPlace, Door), !, check_already_close(CurPlace, Door), !.
@@ -116,4 +116,8 @@ check_already_close(CurPlace, Door) :- door_status(CurPlace, Door, opened).
 check_already_close(_, _) :- write('The door is already closed :)'), nl.
 
 % actually closes a door
-do_close(CurPlace, NewPlace) :- retract(door_status(CurPlace, NewPlace, opened)), asserta(door_status(CurPlace, NewPlace, closed)).
+do_close(CurPlace, NewPlace) :- retract(door_status(CurPlace, NewPlace, opened)), !, asserta(door_status(CurPlace, NewPlace, closed)).
+
+% recursive definition of containment
+is_contained_in(Object, Container) :- location(Object, Container).
+is_contained_in(Object, Container) :- location(X, Container), is_contained_in(Object, X).
