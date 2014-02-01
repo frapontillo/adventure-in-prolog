@@ -10,11 +10,11 @@ is_contained_in(object(Object, Color, Size, Weight), Container) :-
 	is_contained_in(object(AnotherContainer, _, _, _), Container).
 
 % list the elements in a given room (fail is needed to loop through the whole KB)
-list_things(Room) :- is_contained_in(object(Item, _, _, Weight), Room), tab(2), write(Item), write_weight(Weight), nl, fail.
+list_things(Room) :- is_contained_in(object(Item, _, _, Weight), Room), object(Item, _, _, Weight), tab(2), write(Item), write_weight(Weight), nl, fail.
 % after the listing ends, the loop fails, so we need to tell that the "loop" is always true
 list_things(_).
 
-write_weight(1) :- write(' (1 kg)').
+write_weight(Weight) :- Weight =< 1, write(' ('), write(Weight), write(' kg)').
 write_weight(Weight) :- Weight > 1, write(' ('), write(Weight), write(' kgs)').
 
 % tell the game player where he or she is, what things are in the room, and which rooms are adjacent

@@ -25,19 +25,16 @@ object(stamp, blue, small, 0.1).
 object(key, grey, small, 0.2).
 
 % list of all the objects and related locations (dinamically so we can remove some)
-:- dynamic location/2.
-location(object(desk, brown, big, 30), office).
-location(object(apple, yellow, small, 1), kitchen).
-location(object(flashlight, black, small, 2), desk).
-location(object('washing machine', grey, big, 40), cellar).
-location(object(nani, grey, small, 2), 'washing machine').
-location(object(broccoli, green, small, 3), kitchen).
-location(object(crackers, yellow, small, 1), kitchen).
-location(object(computer, grey, small, 10), office).
-% list of nested locations
-location(object(envelope, white, small, 0.2), desk).
-location(object(stamp, blue, small, 0.1), envelope).
-location(object(key, grey, small, 0.2), envelope).
+:- dynamic loc_list/2.
+loc_list([apple, broccoli, crackers], kitchen).
+loc_list([desk, computer], office).
+loc_list([flashlight, envelope], desk).
+loc_list([stamp, key], envelope).
+loc_list(['washing machine'], cellar).
+loc_list([nani], 'washing machine').
+
+% an Object has a location in a Place if the loc_list of that Place contains the Object
+location(object(Object, _, _, _), Place) :- loc_list(List, Place), contains(List, Object).
 
 % list of doors between rooms (one-way, for the moment)
 door(office, hall).
@@ -48,7 +45,7 @@ door('dining room', kitchen).
 
 % door statuses, in the beginning they are all closed
 :- dynamic door_status/3.
-:- door(In, Out), asserta(door_status(In, Out, closed)), fail.
+:- door(In, Out), asserta(door_status(In, Out, closed)), fail.			% always fail, in order to set closed to every door
 
 % facts about properties of things the game player might try to eat
 edible(object(apple, _, _, _)).

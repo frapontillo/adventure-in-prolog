@@ -3,6 +3,7 @@
 %% ------------------- %%
 
 :- [
+	'list-util.pl',
 	'kb.pl',
 	'rules-items.pl', 'rules-connection.pl',
 	'rules-light.pl',
