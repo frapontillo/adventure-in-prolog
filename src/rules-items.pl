@@ -2,12 +2,14 @@ where_food(Food, Location) :- location(object(Food, _, _, _), Location), edible(
 exists_food(Food) :- where_food(Food, ?).
 
 % recursive definition of containment
-% either the Object is directly contained in its Container
-is_contained_in(object(Object, Color, Size, Weight), Container) :- location(object(Object, Color, Size, Weight), Container).
 % or the Object is contained in AnotherContainer, which is contained in the original Container
 is_contained_in(object(Object, Color, Size, Weight), Container) :-
 	location(object(Object, Color, Size, Weight), AnotherContainer),
 	is_contained_in(object(AnotherContainer, _, _, _), Container).
+% either the Object is directly contained in its Container
+is_contained_in(object(Object, Color, Size, Weight), Container) :- location(object(Object, Color, Size, Weight), Container).
+% syntactic alias for is_contained_in
+is_in(Object, Container) :- is_contained_in(object(Object, _, _, _), Container).
 
 % list the elements in a given room (fail is needed to loop through the whole KB)
 list_things(Room) :- is_contained_in(object(Item, _, _, Weight), Room), object(Item, _, _, Weight), tab(2), write(Item), write_weight(Weight), nl, fail.

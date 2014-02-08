@@ -8,5 +8,7 @@
 	'rules-items.pl', 'rules-connection.pl',
 	'rules-light.pl',
 	'rules-open.pl', 'rules-close.pl', 'rules-move.pl',
-	'rules-take.pl', 'rules-put.pl'].
+	'rules-take.pl', 'rules-put.pl',
+	'operators.pl'
+	].
 

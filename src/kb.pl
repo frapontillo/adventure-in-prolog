@@ -61,3 +61,5 @@ turned_off(object(flashlight, _, _, _)).
 % the player is in the kitchen (dinamically so we can remove some)
 :- dynamic here/1.
 here(kitchen).
+
+:- dynamic have/1.

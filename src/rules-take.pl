@@ -22,4 +22,10 @@ list_grabbable_objects :- write('You can take:'), nl,
 	tab(2), write('- '), write(AvailableItem), nl, fail.
 list_grabbable_objects.
 	
-take_object(Item) :- asserta(have(Item)), retract(location(object(Item, _, _, _), _)), !.
+take_object(Item) :-
+	asserta(have(Item)),								% take the Item
+	location(object(Item, _,_,_), Container),			% get the Item Container
+	loc_list(ItemList, Container),						% get the Container ItemList
+	remove(ItemList, Item, NewList),					% remove the Item from the ItemList, getting NewList
+	retract(loc_list(ItemList, Container)),				% remove the old loc_list from memory
+	assertz(loc_list(NewList, Container)), !.			% add the NewList into memory
