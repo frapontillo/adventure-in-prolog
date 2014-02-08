@@ -1,5 +1,5 @@
 % go to a new place
-goto(Place) :- can_go(Place), move(Place), look.
+goto(Place) :- puzzle(goto(Place)), can_go(Place), move(Place), look.
 
 % checks if the player can move to another room
 % as soon as a connection is found, cut the rule (stop and be satisfied with the found value)
